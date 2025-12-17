@@ -160,6 +160,10 @@ def process_parts():
         # NEW FIELD YOU WILL ADD IN GRIST
         product_prefix = (f.get("CNCProductPrefix") or "").strip()
 
+        # Read Optional Item Groups 1
+        optional_group = (f.get("Optional_Item_Group_1") or "").strip()
+
+
         # ------------------------------------------
         # SKIP RULES
         # ------------------------------------------
@@ -197,9 +201,14 @@ def process_parts():
         # ------------------------------------------
         safe_product = sanitize_folder_name(product_prefix)
         safe_thk = sanitize_folder_name(str(thickness))
+        safe_option = sanitize_folder_name(optional_group)
+
 
         # Build MinIO path
-        minio_path = f"DXF/{safe_product}/{safe_thk}/{filename}"
+        if safe_option:
+            minio_path = f"DXF/{safe_product}/{safe_thk}/{safe_option}/{filename}"
+        else:
+            minio_path = f"DXF/{safe_product}/{safe_thk}/{filename}"
 
         # ------------------------------------------
         # UPLOAD TO MINIO
